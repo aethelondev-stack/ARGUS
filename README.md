@@ -4,8 +4,27 @@
 
 ---
 
+## 🌐 The Ecosystem: ARGUS + NEXUS + BUBU
+
+ARGUS is the dedicated Vision Shield & Token Guardian within the autonomous three-layer agent ecosystem:
+
+```text
+ARGUS (Vision Shield & Token Guardian)
+  ↓
+NEXUS (Coordination & Routing Layer)
+  ↓
+BUBU (Context / LLM Worker)
+```
+
+- **[ARGUS](https://github.com/aethelondev-stack/ARGUS):** On-device vision shield and visual grounding using local GPU to prevent multimodal token bleeding.
+- **[NEXUS](https://github.com/aethelondev-stack/NEXUS):** Coordinates multi-worker workflows, handles provider quota (429/TPM) and rate limits, loop detection, and evidence aggregation.
+- **[BUBU](https://github.com/aethelondev-stack/BUBU):** Offloads multi-file context analysis, architectural audits, and memory leak detection.
+
+---
+
 ## 📑 Table of Contents
 
+- [🌐 The Ecosystem: ARGUS + NEXUS + BUBU](#-the-ecosystem-argus--nexus--bubu)
 - [The Crisis: Multimodal Token Bleeding](#-the-crisis-multimodal-token-bleeding)
 - [The Solution: ARGUS Shield](#-the-solution-argus-shield)
 - [⚡ Quick Start](#-quick-start)
