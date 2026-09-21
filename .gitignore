@@ -1,0 +1,39 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Active configuration (template tracked)
+.argus/config.json
+
+# Runtime logs & data
+.argus/logs/*
+!.argus/logs/.gitkeep
+
+# Python cache & build artifacts
+__pycache__/
+*.py[cod]
+*.tmp
+*.log
+
+# Model weights / caches
+*.pt
+*.bin
+*.safetensors
+
+# Screenshots / test dumps
+*.png
+*.jpg
+*.jpeg
+*.xml
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

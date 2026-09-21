@@ -1,0 +1,8 @@
+{
+  "argus_mode": "auto",
+  "default_source": "desktop",
+  "max_consecutive_unchanged": 3,
+  "use_gpu": true,
+  "adb_port": 6175,
+  "version": "1.0.0"
+}
