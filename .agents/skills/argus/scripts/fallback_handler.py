@@ -17,16 +17,21 @@ from PIL import Image
 
 class CircuitBreaker:
     """
-    Perceptual Hash (pHash) based circuit breaker.
-    Tracks visual screen state across actions and halts execution
-    if the display remains unchanged for N consecutive attempts.
+    Perceptual Hash (pHash) based circuit breaker with multi-state cycle detection.
+    Tracks visual screen state across actions and halts execution if:
+    1. Display remains unchanged for N consecutive attempts (A -> A -> A).
+    2. Ping-pong cycle is detected across alternating frames (A -> B -> A -> B).
+    3. 3-state cyclic loop is detected (A -> B -> C -> A -> B -> C).
     """
-    def __init__(self, max_consecutive_unchanged: int = 3):
+    def __init__(self, max_consecutive_unchanged: int = 3, max_history: int = 12):
         self.max_consecutive_unchanged = max_consecutive_unchanged
+        self.max_history = max_history
         self.consecutive_unchanged = 0
         self.last_hash = None
         self.action_history = []
+        self.hash_history = []
         self.is_tripped = False
+        self.trip_reason = ""
 
     def compute_phash(self, image_pil: Image.Image) -> str:
         """Computes a 64-bit difference hash (dHash) from a PIL Image."""
@@ -57,30 +62,55 @@ class CircuitBreaker:
     def check_and_update(self, image_pil: Image.Image, action_name: str) -> tuple[bool, str]:
         """
         Updates circuit breaker state against current screen frame.
+        Detects static freeze (A -> A) and multi-state cycles (A -> B -> A -> B).
         Returns: (can_proceed: bool, message: str)
         """
         current_hash = self.compute_phash(image_pil)
+        self.hash_history.append(current_hash)
+        if len(self.hash_history) > self.max_history:
+            self.hash_history.pop(0)
 
+        # 1. Static interface freeze check
         if self.last_hash is not None:
             dist = self.hamming_distance(self.last_hash, current_hash)
-            # If distance <= 2, the screen hasn't perceptibly changed
             if dist <= 2:
                 self.consecutive_unchanged += 1
             else:
-                self.consecutive_unchanged = 0
+                self.consecutive_unchanged = 1
                 self.is_tripped = False
         else:
-            self.consecutive_unchanged = 0
+            self.consecutive_unchanged = 1
 
         self.last_hash = current_hash
         self.action_history.append((action_name, current_hash))
 
         if self.consecutive_unchanged >= self.max_consecutive_unchanged:
             self.is_tripped = True
-            return False, (
+            self.trip_reason = (
                 f"CIRCUIT_BREAKER_TRIGGERED: Display remained unchanged across {self.consecutive_unchanged} "
                 f"consecutive actions. Interface freeze detected. Halted to prevent token burnout."
             )
+            return False, self.trip_reason
+
+        # 2. Ping-pong cycle detection (A -> B -> A -> B)
+        if len(self.hash_history) >= 4:
+            h = self.hash_history
+            if (self.hamming_distance(h[-4], h[-2]) <= 2 and
+                self.hamming_distance(h[-3], h[-1]) <= 2 and
+                self.hamming_distance(h[-1], h[-2]) > 2):
+                self.is_tripped = True
+                self.trip_reason = "PING_PONG_CYCLE_DETECTED: Alternating screen cycle (A -> B -> A -> B) detected. Loop halted."
+                return False, self.trip_reason
+
+        # 3. Triangular cycle detection (A -> B -> C -> A -> B -> C)
+        if len(self.hash_history) >= 6:
+            h = self.hash_history
+            if (self.hamming_distance(h[-6], h[-3]) <= 2 and
+                self.hamming_distance(h[-5], h[-2]) <= 2 and
+                self.hamming_distance(h[-4], h[-1]) <= 2):
+                self.is_tripped = True
+                self.trip_reason = "TRIANGULAR_LOOP_DETECTED: 3-step screen cycle (A -> B -> C -> A -> B -> C) detected. Loop halted."
+                return False, self.trip_reason
 
         return True, "OK"
 
@@ -88,7 +118,29 @@ class CircuitBreaker:
         """Resets breaker state to normal."""
         self.consecutive_unchanged = 0
         self.last_hash = None
+        self.hash_history = []
         self.is_tripped = False
+        self.trip_reason = ""
+
+
+def redact_sensitive_text(text: str) -> str:
+    """
+    Redacts credentials, tokens, API keys, emails, and phone numbers from OCR/UI strings.
+    """
+    if not text:
+        return text
+
+    # Redact Bearer / Basic tokens
+    text = re.sub(r'(bearer\s+)[a-zA-Z0-9_\-\.]{16,}', r'\1[TOKEN_REDACTED]', text, flags=re.IGNORECASE)
+    # Redact API keys (AIza..., sk-...)
+    text = re.sub(r'\b(AIza[0-9A-Za-z\-_]{25,45}|sk-[a-zA-Z0-9]{20,})\b', '[API_KEY_REDACTED]', text)
+    # Redact Emails
+    text = re.sub(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b', '[EMAIL_REDACTED]', text)
+    # Redact Phone numbers with non-word boundaries
+    text = re.sub(r'(?<!\w)(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}(?!\w)', '[PHONE_REDACTED]', text)
+    # Redact explicit password assignments
+    text = re.sub(r'(password\s*[:=]\s*)[^\s,;]+', r'\1[PASSWORD_REDACTED]', text, flags=re.IGNORECASE)
+    return text
 
 
 def validate_bounding_box(box: list[int], screen_width: int, screen_height: int, score: float = 1.0, min_score: float = 0.60) -> tuple[bool, str]:
