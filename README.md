@@ -62,26 +62,22 @@ ARGUS sits locally between your operating system and your AI coding agent as an 
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start (Zero-Prompt Auto-Onboarding)
 
-Get up and running in under 2 minutes:
+Get up and running in under 30 seconds:
 
-1. **Copy the Installation Payload:**  
-   Copy `.agents/skills/argus/` and `.argus/config.json.example` into your target repository root. *(See [INSTALL.md](INSTALL.md) for full canonical rules).*
-2. **Merge `.gitignore` Rules:**  
-   Append ARGUS runtime ignore rules to your project's `.gitignore`.
-3. **Install Dependencies:**
-   ```powershell
-   pip install -r .agents/skills/argus/requirements.txt
-   ```
-4. **Verify Hardware & Status:**
-   ```powershell
-   python .agents/skills/argus/scripts/argus.py --status
-   ```
-5. **Run a Dry-Run Screen Scan:**
-   ```powershell
-   python .agents/skills/argus/scripts/argus.py --scan --source desktop --dry-run
-   ```
+1. **Copy the Portable Package (`Her proje/`) into your project:**  
+   Copy the contents of `Her proje/` into your target repository root:
+   - `.agents/skills/argus/` (Vision shield engine and MCP tools)
+   - `.argus/logs/` (Log directories)
+   - `AGENTS.md` (Zero-token on-demand onboarding rule)
+   - `.env` & `.gitignore`
+2. **Start coding normally:**
+   Open a new chat in Antigravity and prompt your agent with any task.
+   - Antigravity's `AGENTS.md` rule automatically fulfills your coding task first.
+   - At the end of the response, it asks for your ARGUS and BUBU mode preference once.
+   - **Zero-Token Guard:** If you select `direct` (disabled), it writes the configuration immediately with zero token waste on reading skills or loading models.
+   - If you select `auto` or `local`, it activates the shield on-demand and saves your setting permanently.
 
 ---
 

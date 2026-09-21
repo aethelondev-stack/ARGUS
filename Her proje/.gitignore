@@ -1,0 +1,15 @@
+# ===========================================================================
+# ARGUS / Vision Shield Runtime Exclusions
+# ===========================================================================
+.env
+.env.*
+!.env.example
+.argus/config.json
+.argus/logs/*
+!.argus/logs/.gitkeep
+__pycache__/
+*.py[cod]
+*.tmp
+*.log
+*.png
+*.jpg
