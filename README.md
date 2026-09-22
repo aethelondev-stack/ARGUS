@@ -1,24 +1,24 @@
-# ARGUS: On-Device Vision Shield & Token Guardian
+# ARGUS: Visual / Computer Interaction AI Worker & Vision Shield
 
-> **High-Performance, On-Device Vision Middleware for Autonomous AI Coding Agents (Google Antigravity, Cursor, Cline). Slashes Multimodal Token Bleeding by 97.5% and Eliminates Infinite Retry Loops via Perceptual Circuit Breakers.**
+> **High-Performance, On-Device Vision and Computer Interaction Middleware for Autonomous AI Coding Agents (Google Antigravity, Cursor, Cline). Slashes Multimodal Token Bleeding by 97.5% and Eliminates Infinite Retry Loops via Perceptual Circuit Breakers.**
 
 ---
 
 ## 🌐 The Ecosystem: ARGUS + NEXUS + BUBU
 
-ARGUS is the dedicated Vision Shield & Token Guardian within the autonomous three-layer agent ecosystem:
+ARGUS is the dedicated Visual & Computer Interaction Worker within the autonomous three-layer agent ecosystem:
 
 ```text
-ARGUS (Vision Shield & Token Guardian)
+ARGUS (Visual / Computer Interaction AI Worker)
   ↓
-NEXUS (Coordination & Routing Layer)
+NEXUS (Always-On Host Coordinator)
   ↓
-BUBU (Context / LLM Worker)
+BUBU (General-Purpose AI Worker)
 ```
 
-- **[ARGUS](https://github.com/aethelondev-stack/ARGUS):** On-device vision shield and visual grounding using local GPU to prevent multimodal token bleeding.
-- **[NEXUS](https://github.com/aethelondev-stack/NEXUS):** Coordinates multi-worker workflows, handles provider quota (429/TPM) and rate limits, loop detection, and evidence aggregation.
-- **[BUBU](https://github.com/aethelondev-stack/BUBU):** Offloads multi-file context analysis, architectural audits, and memory leak detection.
+- **[ARGUS](https://github.com/aethelondev-stack/ARGUS):** Visual and computer interaction worker utilizing local GPU to prevent multimodal token bleeding.
+- **[NEXUS](https://github.com/aethelondev-stack/NEXUS):** Always-on host coordinator managing task routing, provider quota (429/TPM) and rate limits, loop detection, and evidence aggregation.
+- **[BUBU](https://github.com/aethelondev-stack/BUBU):** General-purpose AI worker offloading multi-file context analysis, architectural audits, and memory leak detection.
 
 ---
 
